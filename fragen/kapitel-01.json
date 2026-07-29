@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "frage": "Beispielfrage Kapitel 1",
+    "antworten": [
+      "Antwort A",
+      "Antwort B",
+      "Antwort C",
+      "Antwort D"
+    ],
+    "richtig": 1,
+    "erklaerung": "Hier steht später die Erklärung."
+  }
+]
