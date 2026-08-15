@@ -1,7 +1,7 @@
 document.getElementById("kapitel1").addEventListener("click", function () {
 
     document.getElementById("kartenBereich").innerHTML = `
-
+    
         <div class="karte">
 
             <h2>🃏 Kapitel 4 – Karte 1</h2>
@@ -27,7 +27,6 @@ document.getElementById("kapitel1").addEventListener("click", function () {
             </button>
 
         </div>
-
+        
     `;
-
 });
