@@ -3,6 +3,7 @@
     Lernkarten für Kapitel 1 und Kapitel 4
 */
 
+alert("DIE NEUE SCRIPT.JS IST GELADEN");
 
 const lernkarten = {
 
