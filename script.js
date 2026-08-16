@@ -3,27 +3,34 @@ const kartenBereich = document.getElementById("kartenBereich");
 
 let fragen = [];
 
+
 async function ladeKapitel4() {
+
     try {
+
         const antwort = await fetch("fragen/kapitel-04.json");
 
         if (!antwort.ok) {
-            throw new Error("Kapitel 4 konnte nicht geladen werden.");
+            throw new Error("kapitel-04.json konnte nicht geladen werden.");
         }
 
         fragen = await antwort.json();
 
+        console.log("Kapitel 4 geladen:", fragen);
+
     } catch (fehler) {
-        console.error(fehler);
+
+        console.error("Fehler beim Laden:", fehler);
 
         kartenBereich.innerHTML = `
             <div class="karte">
-                <h2>⚠️ Fehler</h2>
+                <h2>⚠️ Fehler beim Laden</h2>
                 <p>Die Lernkarten konnten nicht geladen werden.</p>
             </div>
         `;
     }
 }
+
 
 ladeKapitel4();
 
@@ -34,23 +41,32 @@ themen.forEach(function (thema) {
 
         const name = thema.dataset.thema;
 
+        console.log("Thema geklickt:", name);
+
         const passendeFragen = fragen.filter(function (frage) {
             return frage.thema === name;
         });
+
 
         if (passendeFragen.length === 0) {
 
             kartenBereich.innerHTML = `
                 <div class="karte">
                     <h2>📚 ${name}</h2>
+
                     <p>
                         Für dieses Thema sind noch keine Lernkarten vorhanden.
                     </p>
                 </div>
             `;
 
+            kartenBereich.scrollIntoView({
+                behavior: "smooth"
+            });
+
             return;
         }
+
 
         zeigeKarte(passendeFragen[0]);
 
@@ -66,7 +82,7 @@ function zeigeKarte(frage) {
         <div class="karte">
 
             <div class="kartenNummer">
-                KARTE ${frage.id}
+                🃏 LERNKARTE ${frage.id}
             </div>
 
             <h2>${frage.thema}</h2>
@@ -112,6 +128,7 @@ function zeigeKarte(frage) {
             const ausgewaehlt =
                 Number(button.dataset.index);
 
+
             antwortButtons.forEach(function (b) {
                 b.disabled = true;
             });
@@ -123,9 +140,13 @@ function zeigeKarte(frage) {
 
                 feedback.innerHTML = `
                     <div class="feedback richtigText">
+
                         ✅ Richtig!
-                        <br><br>
-                        ${frage.erklaerung}
+
+                        <p>
+                            ${frage.erklaerung}
+                        </p>
+
                     </div>
                 `;
 
@@ -138,14 +159,22 @@ function zeigeKarte(frage) {
 
                 feedback.innerHTML = `
                     <div class="feedback falschText">
+
                         ❌ Leider falsch.
-                        <br><br>
-                        Die richtige Antwort ist
-                        <strong>
-                            ${String.fromCharCode(65 + frage.richtig)}
-                        </strong>.
-                        <br><br>
-                        ${frage.erklaerung}
+
+                        <p>
+                            Die richtige Antwort ist
+                            <strong>
+                                ${String.fromCharCode(
+                                    65 + frage.richtig
+                                )}
+                            </strong>.
+                        </p>
+
+                        <p>
+                            ${frage.erklaerung}
+                        </p>
+
                     </div>
                 `;
             }
@@ -158,55 +187,5 @@ function zeigeKarte(frage) {
     kartenBereich.scrollIntoView({
         behavior: "smooth"
     });
-}const themen = document.querySelectorAll(".thema");
-const kartenBereich = document.getElementById("kartenBereich");
 
-themen.forEach(function (thema) {
-
-    thema.addEventListener("click", function () {
-
-        const name = thema.dataset.thema;
-
-        kartenBereich.innerHTML = `
-            <div class="karte">
-
-                <div class="kartenNummer">
-                    LERNKARTE
-                </div>
-
-                <h2>${name}</h2>
-
-                <p class="frage">
-                    Was möchtest du über dieses Thema lernen?
-                </p>
-
-                <div class="antworten">
-
-                    <button class="antwort">
-                        A) Ich möchte die Grundlagen verstehen.
-                    </button>
-
-                    <button class="antwort">
-                        B) Ich möchte Beispiele kennenlernen.
-                    </button>
-
-                    <button class="antwort">
-                        C) Ich möchte mein Wissen testen.
-                    </button>
-
-                    <button class="antwort">
-                        D) Ich möchte alles wiederholen.
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-        kartenBereich.scrollIntoView({
-            behavior: "smooth"
-        });
-
-    });
-
-});
+}
