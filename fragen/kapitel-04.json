@@ -1,1 +1,16 @@
 
+[
+  {
+    "id": 1,
+    "thema": "4.1 Belege und Belegwesen",
+    "frage": "Was ist ein Beleg?",
+    "antworten": [
+      "Ein Nachweis über einen Geschäftsvorfall",
+      "Eine Werbeanzeige",
+      "Eine Webseite",
+      "Eine Kundennummer"
+    ],
+    "richtig": 0,
+    "erklaerung": "Ein Beleg dokumentiert einen Geschäftsvorfall und dient als Grundlage der Buchführung."
+  }
+]
