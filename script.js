@@ -539,7 +539,7 @@ const lernkarten = {
 
 
 function zeigeThema(thema) {
-
+alert("BUTTON FUNKTIONIERT: " + thema);
     const karte = lernkarten[thema];
 
     const bereich =
