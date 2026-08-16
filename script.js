@@ -1,191 +1,200 @@
-const themen = document.querySelectorAll(".thema");
-const kartenBereich = document.getElementById("kartenBereich");
+(() => {
 
-let fragen = [];
-
-
-async function ladeKapitel4() {
-
-    try {
-
-        const antwort = await fetch("fragen/kapitel-04.json");
-
-        if (!antwort.ok) {
-            throw new Error("kapitel-04.json konnte nicht geladen werden.");
-        }
-
-        fragen = await antwort.json();
-
-        console.log("Kapitel 4 geladen:", fragen);
-
-    } catch (fehler) {
-
-        console.error("Fehler beim Laden:", fehler);
-
-        kartenBereich.innerHTML = `
-            <div class="karte">
-                <h2>⚠️ Fehler beim Laden</h2>
-                <p>Die Lernkarten konnten nicht geladen werden.</p>
-            </div>
-        `;
+    if (window.ecoVolutionAppLoaded) {
+        console.log("ECO-Volution: Script bereits geladen.");
+        return;
     }
-}
 
+    window.ecoVolutionAppLoaded = true;
 
-ladeKapitel4();
+    const themen = document.querySelectorAll(".thema");
+    const kartenBereich = document.getElementById("kartenBereich");
 
+    let fragen = [];
 
-themen.forEach(function (thema) {
+    async function ladeKapitel4() {
 
-    thema.addEventListener("click", function () {
+        try {
 
-        const name = thema.dataset.thema;
+            const antwort = await fetch("fragen/kapitel-04.json");
 
-        console.log("Thema geklickt:", name);
+            if (!antwort.ok) {
+                throw new Error("kapitel-04.json konnte nicht geladen werden.");
+            }
 
-        const passendeFragen = fragen.filter(function (frage) {
-            return frage.thema === name;
-        });
+            fragen = await antwort.json();
 
+            console.log("✅ Kapitel 4 geladen:", fragen);
 
-        if (passendeFragen.length === 0) {
+        } catch (fehler) {
+
+            console.error("❌ Fehler beim Laden:", fehler);
 
             kartenBereich.innerHTML = `
                 <div class="karte">
-                    <h2>📚 ${name}</h2>
-
-                    <p>
-                        Für dieses Thema sind noch keine Lernkarten vorhanden.
-                    </p>
+                    <h2>⚠️ Fehler beim Laden</h2>
+                    <p>Die Lernkarten konnten nicht geladen werden.</p>
                 </div>
             `;
-
-            kartenBereich.scrollIntoView({
-                behavior: "smooth"
-            });
-
-            return;
         }
+    }
 
 
-        zeigeKarte(passendeFragen[0]);
+    themen.forEach(function (thema) {
 
-    });
+        thema.addEventListener("click", function () {
 
-});
+            const name = thema.dataset.thema;
 
+            console.log("🖱️ Thema geklickt:", name);
 
-function zeigeKarte(frage) {
-
-    kartenBereich.innerHTML = `
-
-        <div class="karte">
-
-            <div class="kartenNummer">
-                🃏 LERNKARTE ${frage.id}
-            </div>
-
-            <h2>${frage.thema}</h2>
-
-            <p class="frage">
-                ${frage.frage}
-            </p>
-
-            <div class="antworten">
-
-                ${frage.antworten.map(function (antwort, index) {
-
-                    return `
-                        <button
-                            class="antwort"
-                            data-index="${index}"
-                        >
-                            ${String.fromCharCode(65 + index)}) ${antwort}
-                        </button>
-                    `;
-
-                }).join("")}
-
-            </div>
-
-            <div id="feedback"></div>
-
-        </div>
-    `;
-
-
-    const antwortButtons =
-        document.querySelectorAll(".antwort");
-
-    const feedback =
-        document.getElementById("feedback");
-
-
-    antwortButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            const ausgewaehlt =
-                Number(button.dataset.index);
-
-
-            antwortButtons.forEach(function (b) {
-                b.disabled = true;
+            const passendeFragen = fragen.filter(function (frage) {
+                return frage.thema === name;
             });
 
 
-            if (ausgewaehlt === frage.richtig) {
+            if (passendeFragen.length === 0) {
 
-                button.classList.add("richtig");
-
-                feedback.innerHTML = `
-                    <div class="feedback richtigText">
-
-                        ✅ Richtig!
+                kartenBereich.innerHTML = `
+                    <div class="karte">
+                        <h2>📚 ${name}</h2>
 
                         <p>
-                            ${frage.erklaerung}
+                            Für dieses Thema sind noch keine Lernkarten vorhanden.
                         </p>
-
                     </div>
                 `;
 
-            } else {
+                kartenBereich.scrollIntoView({
+                    behavior: "smooth"
+                });
 
-                button.classList.add("falsch");
-
-                antwortButtons[frage.richtig]
-                    .classList.add("richtig");
-
-                feedback.innerHTML = `
-                    <div class="feedback falschText">
-
-                        ❌ Leider falsch.
-
-                        <p>
-                            Die richtige Antwort ist
-                            <strong>
-                                ${String.fromCharCode(
-                                    65 + frage.richtig
-                                )}
-                            </strong>.
-                        </p>
-
-                        <p>
-                            ${frage.erklaerung}
-                        </p>
-
-                    </div>
-                `;
+                return;
             }
+
+
+            zeigeKarte(passendeFragen[0]);
 
         });
 
     });
 
 
-    kartenBereich.scrollIntoView({
-        behavior: "smooth"
-    });
+    function zeigeKarte(frage) {
 
-}
+        kartenBereich.innerHTML = `
+            <div class="karte">
+
+                <div class="kartenNummer">
+                    🃏 LERNKARTE ${frage.id}
+                </div>
+
+                <h2>${frage.thema}</h2>
+
+                <p class="frage">
+                    ${frage.frage}
+                </p>
+
+                <div class="antworten">
+
+                    ${frage.antworten.map(function (antwort, index) {
+
+                        return `
+                            <button
+                                class="antwort"
+                                data-index="${index}"
+                            >
+                                ${String.fromCharCode(65 + index)}) ${antwort}
+                            </button>
+                        `;
+
+                    }).join("")}
+
+                </div>
+
+                <div id="feedback"></div>
+
+            </div>
+        `;
+
+
+        const antwortButtons =
+            document.querySelectorAll(".antwort");
+
+        const feedback =
+            document.getElementById("feedback");
+
+
+        antwortButtons.forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+                const ausgewaehlt =
+                    Number(button.dataset.index);
+
+
+                antwortButtons.forEach(function (b) {
+                    b.disabled = true;
+                });
+
+
+                if (ausgewaehlt === frage.richtig) {
+
+                    button.classList.add("richtig");
+
+                    feedback.innerHTML = `
+                        <div class="feedback richtigText">
+
+                            ✅ Richtig!
+
+                            <p>
+                                ${frage.erklaerung}
+                            </p>
+
+                        </div>
+                    `;
+
+                } else {
+
+                    button.classList.add("falsch");
+
+                    antwortButtons[frage.richtig]
+                        .classList.add("richtig");
+
+                    feedback.innerHTML = `
+                        <div class="feedback falschText">
+
+                            ❌ Leider falsch.
+
+                            <p>
+                                Die richtige Antwort ist
+                                <strong>
+                                    ${String.fromCharCode(
+                                        65 + frage.richtig
+                                    )}
+                                </strong>.
+                            </p>
+
+                            <p>
+                                ${frage.erklaerung}
+                            </p>
+
+                        </div>
+                    `;
+                }
+
+            });
+
+        });
+
+
+        kartenBereich.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    ladeKapitel4();
+
+})();
